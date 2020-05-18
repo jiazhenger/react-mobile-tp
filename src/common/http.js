@@ -12,7 +12,7 @@ const logMsg = (msg,content)=>{ Config.env && console.log(msg,content) }
 // 配置头信息
 const config = (opt)=>{
 	const type = ['application/json;charset=utf-8','application/x-www-form-urlencoded','multipart/form-data']
-	let contentType = type[$fn.isValid(opt.type) ?  opt.type : Config.contentType]
+	const contentType = type[$fn.isValid(opt.type) ?  opt.type : Config.contentType]
 	// 签名验证
 	/*
 	let time = new Date().getTime();
@@ -24,9 +24,8 @@ const config = (opt)=>{
 		{ 'Content-Type'	: contentType } : 
 		{ 
 			'Content-Type'	: contentType,
-			'Authorization'	: $fn.getToken()
+			'Authorization'	: $fn.getToken(),
 		}
-                
 	return {
 		baseURL: opt.api,
 		headers: header,
@@ -86,7 +85,6 @@ const coreRequest = (url, param, action, defined) => {
 	let promise;
 	let configs = config({
 		type	: UD.type,
-		upload	: UD.upload,
 		noToken	: UD.noToken,
 		api		: api
 	})
@@ -106,29 +104,28 @@ const coreRequest = (url, param, action, defined) => {
 		promise.then(res => {	// 接口正确接收数据处理
 			let data = res.data;
 			let code = data.status;
-			
+            
 			if(code === 1){	// 数据请求成功
 				resolve(data.data);
 				logMsg(url + '===', data.data);
-			} else if(code === 501){	// 登录信息已过期，请重新登录!
+			} else if(code === -40412322 || code === -10005){	// 登录信息已过期，请重新登录!
 				$fn.toast(data['msg'])
 				$fn.remove()
 				$fn.loginTo()
 				// 跳转不同登录页
-				setTimeout(()=>$fn.go('/'))
+				setTimeout(()=>$fn.go('/login'))
 			}else{ // 数据请求成功但不符合规则
-				reject(data);
-					
-				$fn.isFunction(UD.onError) && UD.onError(data)	// 只要出错就调用
-				$fn.isFunction(UD.onFail) && UD.onFail(data)	// 数据处理不满足条件时调用
-				
-				if(UD.onMsg){
-					$fn.isFunction(UD.onMsg) && UD.onMsg(data)		// 自定义提示
-				}else{
-					$fn.toast(data['msg'],UD.onError)			// 默认开启出错提示
-				}
-				
-				logMsg(url + '===', data);
+                reject(data);
+                                
+                $fn.isFunction(UD.onError) && UD.onError(data)	// 只要出错就调用
+                $fn.isFunction(UD.onFail) && UD.onFail(data)	// 数据处理不满足条件时调用
+                
+                if(UD.onMsg){
+                    $fn.isFunction(UD.onMsg) && UD.onMsg(data)		// 自定义提示
+                }else{
+                    $fn.toast(data['msg'],UD.onError)			// 默认开启出错提示
+                }
+                logMsg(url + '===', data);
 			}
 			
 			$fn.isFunction(UD.onEnd)		&& UD.onEnd(data)  		// 只要调用接口就调用
@@ -257,6 +254,7 @@ const pull = (_this,api,option)=>{
 						if(!opt.loading){ $fn.loading(false) }
 			},
 			noToken	: opt.noToken,
+            isStream: opt.isStream
 		}).then(data=>{
 			if($fn.isValid(data)){
 				if($fn.isFunction(opt.onSuccess)){
@@ -282,8 +280,9 @@ const paging = (_this,api,option)=>{
         pageCurrent		: 'pageCurrent',          	// 当前页
         pagingLoading	: 'pagingLoading',		    // 加载判断
         loadingComplete	: 'loadingComplete', 		// 加载完毕
-        loading			: true,
+        loading			: false,
         pageSize		: Config.pageSize,
+		ref 			: 'paging',
 		...option
 	}
 	
@@ -297,10 +296,8 @@ const paging = (_this,api,option)=>{
 		_this.setState({ [opt.pagingLoading] : true, [opt.loadingComplete] 	: false })
 	}
 	
-	if($fn.hasArray(_this.state[opt.dataName])){ // 有数据时
-		
-	}else{
-		opt.loading && $fn.loading(true,opt.loadingText)
+	if(!$fn.hasArray(_this.state[opt.dataName]) || opt.loading){ // 有数据时
+		$fn.loading(true,opt.loadingText)
 	}
 	
 	if(opt.isReset){
@@ -312,7 +309,7 @@ const paging = (_this,api,option)=>{
 			onStart	: ()=>{ opt.onStart && opt.onStart(true) },
 			onEnd	: ()=>{
 						_this && _this.setState({ [opt.pagingLoading] : false })
-						opt.loading && $fn.loading(false)
+						$fn.loading(false)
 						opt.onEnd && opt.onEnd(false)
 			},
 			onMsg	: opt.onMsg && ( data => { $fn.isFunction(opt.onMsg) && opt.onMsg(data) }),
@@ -320,7 +317,7 @@ const paging = (_this,api,option)=>{
 			onError	: ()=>{
 						setType(_this,opt.dataName) 	 // 出错，清空 data
 						opt.onError && opt.onError()
-						if(!opt.loading){ $fn.loading(false) }
+						$fn.loading(false)
 			},
 			noToken	: opt.noToken,
 		}).then(data=>{
@@ -333,6 +330,7 @@ const paging = (_this,api,option)=>{
             	[opt.dataName]		:  [ ..._this.state[opt.dataName], ...result],
             	[opt.pageCurrent]	:  _this.state[opt.pageCurrent] + 1
             })
+			
             if (
 				($fn.hasArray(_this.state[opt.dataName]) && _this.state[opt.dataName].length === +data.total_num) || 
 				_this.state[opt.dataName].length === 0 || 
