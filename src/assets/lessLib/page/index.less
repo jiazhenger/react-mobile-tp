@@ -1,0 +1,20 @@
+﻿/* ================================ *** 个性化模块 *** ================================ */
+.form-list{
+    >.list:extend(.bbor1){
+        &:last-child{.bbor0}
+    }
+}
+
+.tap-bcm,.tap-ke{tap-highlight-color:rgba(0,0,0,0);.user-select;
+    &:active{.bc(#ffa48f) !important;}
+}
+.tap-ke{
+    &:active{.bc(#fefefe) !important;.bor(@main-color)!important;.index(1)}
+}
+
+.ke-list:empty:extend(.dn){}
+
+.am-button-ghost{.bor(@main-color)!important;
+    &:before{.dn!important}
+    &:active{.op(.5)!important}
+}
