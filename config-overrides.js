@@ -18,7 +18,7 @@ module.exports = override(
 	  	
 	  	['@assets'] : resolve('src/assets'),
 	  	['@css'] 	: resolve('src/assets/css'),
-	  	['@images'] : resolve('src/assets/images'),
+	  	['@img'] : resolve('src/assets/images'),
 	  	['@js'] 	: resolve('src/assets/js'),
 	  	['@pages'] 	: resolve('src/pages'),
 	  	
