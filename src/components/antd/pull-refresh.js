@@ -2,7 +2,7 @@ import React from 'react'
 // ===================================================================== antd
 import { PullToRefresh, ListView, Icon } from 'antd-mobile'
 // ===================================================================== declare
-const { $config } = window
+const { $config, $fn } = window
 // =====================================================================
 export default class extends React.Component{
 	state = {
@@ -34,7 +34,9 @@ export default class extends React.Component{
 											<div className='tc f12 pb20'>
 												{
 													loading ? <div className='fxmc'><Icon type='loading'/><span className='ml5'>数据加载中...</span></div>
-															: <span>～没有更多数据啦～</span>
+															: (
+																$fn.hasArray(data) ? <span>～没有更多数据啦～</span> : '暂无数据'
+															)
 												}
 											</div>
 				)}
