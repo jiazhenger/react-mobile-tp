@@ -282,7 +282,7 @@ const paging = (_this,api,option)=>{
         loadingComplete	: 'loadingComplete', 		// 加载完毕
         loading			: false,
         pageSize		: Config.pageSize,
-		ref 			: 'paging',
+        isReset         : false,                    // 是否重新加载数据
 		...option
 	}
 	
