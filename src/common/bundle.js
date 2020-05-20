@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import PageLoading from '@cpx/page-loading'
 // =====================================================================
 export const Bundle = importComponent => {
-    class AsyncComponent extends Component {
+    return class extends Component {
        	
        	state = {
        		Component: () => <PageLoading/>
@@ -22,8 +22,6 @@ export const Bundle = importComponent => {
             return Component ? <Component {...this.props} /> : null
         }
     }
-
-    return AsyncComponent
 }
 
 export default path => Bundle(() => import('@pages/' + path))
