@@ -19,4 +19,4 @@ export const Alert = option => {
 	)
 }
 
-export default { Alert }
+export default Alert

@@ -1,6 +1,6 @@
 import React from 'react'
 // ===================================================================== material-ui
-import Button from '@material-ui/core/Button'
+import { Button } from '@material-ui/core'
 // =====================================================================
 const Wrap = props => (
 	<div className={`${props.className?props.className:''} fxc`}>
@@ -10,7 +10,7 @@ const Wrap = props => (
 export default class Buttons extends React.Component{
 	static Wrap = Wrap
 	render(){
-		const { type, label, onClick, children, loading, color, disabled, auto, size, variant, width, round, style } = this.props
+		const { type, label, onClick, children, loading, color, disabled, auto, size, variant, width, round, style, replace, push } = this.props
 		let sizeStyle = { }
 		let roundStyle = { }
 		if(!size){
@@ -19,12 +19,16 @@ export default class Buttons extends React.Component{
 		if(round){
 			roundStyle = {borderRadius:'20px'}
 		}
+		// 
+		let click = onClick
+		if(replace) click = ()=> this.props.history.replace(replace)
+		else if(push) click = ()=> this.props.history.push(push)
 		
 		return (
 			<Button
 				type		= { type } 
-				onClick		= { onClick }
-				variant 	= { variant || 'contained' }
+				onClick		= { click }
+				variant 	= { variant || 'contained' }  // 按钮类型
 				disabled	= { disabled }
 				color 		= { color ? color : 'primary' }
 				className 	= {`${auto?'':'w'}`}

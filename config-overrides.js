@@ -9,7 +9,7 @@ module.exports = override(
 		['@'] 		: resolve('src'),
 	  	['@com'] 	: resolve('src/common'),
 	  	['@cpt'] 	: resolve('src/components'),
-	    ['@tp'] 	: resolve('src/components/template'),
+	    ['@tp'] 	: resolve('src/template'),
 	    ['@antd'] 	: resolve('src/components/antd'),
 	    ['@mu'] 	: resolve('src/components/material-ui'),
 	    ['@es'] 	: resolve('src/components/echarts'),
@@ -34,7 +34,7 @@ module.exports = override(
 	addLessLoader({
 		javascriptEnabled: true,
 		modifyVars: { 
-			'@brand-primary': '#FF6B51',
+			'@brand-primary': '#3385ff',
 			'@brand-primary-tap': '#fe8c78'
 		},
 	})

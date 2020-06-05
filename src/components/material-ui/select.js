@@ -1,16 +1,16 @@
 import React from 'react'
 // ===================================================================== material-ui
-import { TextField, InputAdornment, IconButton } from '@material-ui/core'
+import { Select, MenuItem, InputAdornment, IconButton } from '@material-ui/core'
 import { HighlightOff } from '@material-ui/icons'
-
+// ===================================================================== declare
 const { $fn } = window
 // =====================================================================
 const Wrap = props => (
 	<div className={props.className?props.className:''}>
-		<TextFields {...props} />
+		<Selects {...props} />
 	</div>
 )
-export default class TextFields extends React.Component{
+export default class Selects extends React.Component{
 	static Wrap = Wrap
 	
 	state={
@@ -31,6 +31,7 @@ export default class TextFields extends React.Component{
 	setValue = value => { this.setState({value: value }) }
 	
 	reset = () => this.setState({ value:'' })
+	
 	onClear = () => {
 		this.reset()
 		this.props.onChange && this.props.onChange({[this.props.name]:null})
@@ -38,25 +39,34 @@ export default class TextFields extends React.Component{
 	}
 	
 	render(){
-		const { type, label, auto, size, disabled, p, error, value, variant, hideClear } = this.props
+		const { type, label, auto, size, disabled, p, error, data, id, native, value, hideClear } = this.props
 		return (
-			<TextField
+			<Select
 				value		= {  $fn.isValid(this.state.value) ? this.state.value : ($fn.isValid(value)?value:'') }
 				disabled	= { disabled }
+				id 			= { id }
 				label 		= { label }
 				size 		= { size }
 				className 	= {`${auto?'':'w'}`}
 				onChange	= { this.onChange }
 				type 		= { type }
-				variant		= { variant }
-				placeholder	= { p ? p : '请输入' + label }
+				placeholder	= { p ? p : '请选择' + label }
 				error		= { error }
-				InputProps={{
-					endAdornment: (
-						($fn.isValid(this.state.value) && !hideClear) && <InputAdornment position='end' style={{margin:0}}><IconButton onClick={this.onClear}><HighlightOff /></IconButton></InputAdornment>
-					)
+				native 		= { native }
+				classes 	= {{
+					
 				}}
-			/>
+				endAdornment={
+					($fn.isValid(this.state.value) && !hideClear) && <InputAdornment className='mr5' position='end'><IconButton onClick={this.onClear}><HighlightOff /></IconButton></InputAdornment>
+				}
+			>
+				{
+					$fn.hasArray(data) && data.map((v,i)=>(
+						native ? <option key={i} value={v.value}>{v.label}</option> : 
+								 <MenuItem key={i} value={v.value}>{v.label}</MenuItem>
+					))
+				}
+			</Select>
 		)
 	}
 }
