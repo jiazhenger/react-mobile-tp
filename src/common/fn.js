@@ -1,5 +1,5 @@
 /* ====================================== 全局变量及方法  ====================================== */
-import LS from './localStorage'
+import LS from './store/localStorage'
 export default {
 	c0:'#5A83FF',
 	c1:'#FF5218',
