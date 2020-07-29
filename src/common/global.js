@@ -1,9 +1,10 @@
 /* ====================================== api 配置  ====================================== */
-import Config from './config'
 import Fn from './fn'
 import Http from './http'
+import Config from './config'
+import Async from './async'
 
-window.$config = Config
 window.$fn = Fn
 window.$http = Http
-
+window.$config = Config
+window.$async = Async
