@@ -1,7 +1,7 @@
-﻿import React from 'react'
+import React from 'react'
 // ===================================================================== public component
-import Content from '@cpx/content'
-import Button from '@cpt/antd/button'
+import Content from '@base/content'
+import Button from '@antd/button'
 import NotFound from './svg'
 // =====================================================================
 export default ({ history }) => (
