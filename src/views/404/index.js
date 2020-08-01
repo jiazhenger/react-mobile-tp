@@ -1,6 +1,6 @@
 import React from 'react'
 // ===================================================================== public component
-import Content from '@base/content'
+import Content from '@tp/content'
 import Button from '@antd/button'
 import NotFound from './svg'
 // =====================================================================
